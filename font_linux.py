@@ -3,7 +3,8 @@
 import os
 import re
 from PIL import Image, ImageDraw, ImageFont
- 
+import sys
+
 SIZE = W, H = 28, 28
  
 def num_to_english(x):
@@ -30,23 +31,33 @@ def calculate_height(fnt):
     return h
 
 def create_number_image(number,fnt,w,h):
-    size  = w,h 
+
+    tw, th = fnt.getsize(str(number))
+    w = tw + 2 
+    h = th + 2
+    size  = w,h
+    
     back_image = Image.new("RGBA", size, (255, 255, 255, 0))
     txt_image = Image.new('RGBA', size, (0, 0, 0, 255))
     draw = ImageDraw.Draw(txt_image)
-    tw, th = fnt.getsize(str(number))
+
+    print("W=" + str(tw) + " H=" + str(th))
+    
     draw.text(((w - tw) / 2, (h - th) / 2), str(number), font=fnt, fill=(255, 255, 255, 255))
+    
+#    draw.text(((w - tw) / 2, 0), str(number), font=fnt, fill=(255, 255, 255, 255))
     img = Image.alpha_composite(back_image, txt_image)
     img = img.resize((W,H))
     return img
+
         
-def make_image(idx, font_name):
+def make_image(idx, font_name,id):
     print (font_name.strip(".ttf"))
     fnt = ImageFont.truetype("./f/{}".format(font_name), 25)
 
     h = calculate_height(fnt)
-    if H < h:
-        return
+#    if H < h:
+#        return
     print("Height=" + str(h))
     all = create_number_image(0,fnt,W,h)
     for i in range(1,10):
@@ -55,15 +66,16 @@ def make_image(idx, font_name):
     img = create_number_image(0,fnt,W,h)
     all = get_concat_v(all, img)
     all = all.convert('L')
-    all.save("fonts/" + font_name.strip(".ttf") + ".bmp")
+    all.save("fonts/" + font_name.strip(".ttf") + id +".bmp")
     
         
 def main():
+    id = sys.argv[1]    
     rp = re.compile(".*ttf")
     font_list = [fnt for fnt in os.listdir("./f") if rp.match(fnt)]
  
     for idx, font_name in enumerate(font_list):
-        make_image(idx, font_name)
+        make_image(idx, font_name,id)
  
 if __name__ == '__main__':
     main()
