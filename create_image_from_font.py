@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import sys
 import numpy
 
-SIZE = W, H = 28, 28
+SIZE = W, H = 100, 100
 FONT_SIZE = 100
  
 def get_concat_v(im1, im2):
