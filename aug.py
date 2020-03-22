@@ -8,7 +8,7 @@ from PIL import Image
 # 画像を読み込む。
 
 base_path='base/'
-save_path='aaa/'
+save_path='input/'
 import os
 os.makedirs(save_path, exist_ok=True)
 
